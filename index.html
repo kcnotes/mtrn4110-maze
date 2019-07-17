@@ -57,6 +57,7 @@
         <p>Encode your maze here! </p>
         <div id="maze"></div>
         <br/>
+        <button id="direction" data-dir="0">North</button>
         <input id="encoded"></input>
         <!--<input id="encoded2"></input>-->
         <template id="v-wall"><div class="wall v-wall on"></div></template>
@@ -90,6 +91,8 @@
             var str = 'SS';
             var start = $('.start');
             str += (start.length ? start.data('tileid') : 'N');
+            str += 'D';
+            str += $('#direction').attr('data-dir');
             str += 'H';
             $('.wall.h-wall').each(function(d, wall) {
                 str += $(wall).hasClass('on') ? 1 : ($(wall).hasClass('unknown') ? 2 : 0);
@@ -99,40 +102,6 @@
                 str += $(wall).hasClass('on') ? 1 : ($(wall).hasClass('unknown') ? 2 : 0);
             });
             str += 'E';
-            return str;
-        }
-
-        var getEncodedBytes = function() {
-            var encodedBytes = [];
-            encodedBytes.push("'S'");
-            encodedBytes.push("'S'");
-            var start = $('.start');
-            encodedBytes.push(start.length ? start.data('tileid') : 255);
-            encodedBytes.push("'H'");
-            var i = 4;
-            var div8 = 0;
-            $('.wall.h-wall').each(function(d, wall) {
-                if (div8 === 8) {
-                    i++;
-                    div8 = 0;
-                }
-                encodedBytes[i] |= $(wall).hasClass('on') ? (1 << (div8 % 8)) : 0;
-                div8++;
-            });
-            encodedBytes.push("'V'");
-            i += 2;
-            div8 = 0;
-            $('.wall.v-wall').each(function(d, wall) {
-                if (div8 === 8) {
-                    i++;
-                    div8 = 0;
-                }
-                encodedBytes[i] |= $(wall).hasClass('on') ? (1 << (div8 % 8)) : 0;
-                div8++;
-            });
-            encodedBytes.push("'E'");
-            console.log(encodedBytes);
-            var str = "{" + encodedBytes.join(', ') + "}";
             return str;
         }
         
@@ -154,7 +123,6 @@
         // Post-processing
         // Show encoded value in the textbox
         $('#encoded').val(getEncodedText());
-        $('#encoded2').val(getEncodedBytes());
         // Mark the end tile
         $('#maze .tile:eq(22)').addClass('end').html('E');
 
@@ -170,19 +138,31 @@
                 $(this).removeClass('off');
             }
             $('#encoded').val(getEncodedText());
-            $('#encoded2').val(getEncodedBytes());
         });
         $('.tile').on('click', function(e) {
             if ($(this).html() === 'S') {
                 $('.start').removeClass('start').html('');
                 $('#encoded').val(getEncodedText());
-                $('#encoded2').val(getEncodedBytes());
                 return;
             }
             $('.start').removeClass('start').html('');
             $(this).addClass('start').html('S');
             $('#encoded').val(getEncodedText());
-            $('#encoded2').val(getEncodedBytes());
+        });
+        $('#direction').on('click', function() {
+            var direction = parseInt($(this).attr('data-dir'));
+            console.log(direction);
+            $(this).attr('data-dir', ++direction % 4);
+            if (direction === 0) {
+                $(this).text('North');
+            } else if (direction === 1) {
+                $(this).text('East');
+            } else if (direction === 2) {
+                $(this).text('South');
+            } else {
+                $(this).text('West');
+            }
+            $('#encoded').val(getEncodedText());
         });
     </script>
 </html>

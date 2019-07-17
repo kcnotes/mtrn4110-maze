@@ -151,8 +151,8 @@
         });
         $('#direction').on('click', function() {
             var direction = parseInt($(this).attr('data-dir'));
-            console.log(direction);
-            $(this).attr('data-dir', ++direction % 4);
+            direction = ++direction % 4;
+            $(this).attr('data-dir', direction);
             if (direction === 0) {
                 $(this).text('North');
             } else if (direction === 1) {

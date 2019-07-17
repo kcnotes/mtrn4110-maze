@@ -58,6 +58,7 @@
         <div id="maze"></div>
         <br/>
         <button id="direction" data-dir="0">North</button>
+        <button id="flip">Flip all walls</button>
         <input id="encoded"></input>
         <!--<input id="encoded2"></input>-->
         <template id="v-wall"><div class="wall v-wall on"></div></template>
@@ -163,6 +164,9 @@
                 $(this).text('West');
             }
             $('#encoded').val(getEncodedText());
+        });
+        $('#flip').on('click', function() {
+            $('.wall').click();
         });
     </script>
 </html>

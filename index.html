@@ -59,6 +59,7 @@
         <br/>
         <button id="direction" data-dir="0">North</button>
         <button id="flip">Flip all walls</button>
+        <button id="reset">Reset walls</button>
         <input id="encoded"></input>
         <!--<input id="encoded2"></input>-->
         <template id="v-wall"><div class="wall v-wall on"></div></template>
@@ -89,11 +90,9 @@
         }
 
         var getEncodedText = function() {
-            var str = 'SS';
-            var start = $('.start');
-            str += (start.length ? start.data('tileid') : 'N');
-            str += 'D';
-            str += $('#direction').attr('data-dir');
+            var str = 'SD';
+            var encodedDirection = parseInt($('#direction').attr('data-dir')) + 1;
+            str += encodedDirection.toString();
             str += 'H';
             $('.wall.h-wall').each(function(d, wall) {
                 str += $(wall).hasClass('on') ? 1 : ($(wall).hasClass('unknown') ? 2 : 0);
@@ -102,6 +101,16 @@
             $('.wall.v-wall').each(function(d, wall) {
                 str += $(wall).hasClass('on') ? 1 : ($(wall).hasClass('unknown') ? 2 : 0);
             });
+            str += 'L';
+            var start = $('.start');
+            if (start.length) {
+                var start = parseInt(start.data('tileid'));
+                var startrow = Math.floor(start / 9);
+                var startcol = start % 9;
+                str += startrow.toString() + startcol.toString();
+            } else {
+                str += "NN";
+            }
             str += 'E';
             return str;
         }
@@ -152,7 +161,7 @@
         });
         $('#direction').on('click', function() {
             var direction = parseInt($(this).attr('data-dir'));
-            direction = ++direction % 4;
+            direction = (++direction) % 4;
             $(this).attr('data-dir', direction);
             if (direction === 0) {
                 $(this).text('North');
@@ -168,5 +177,9 @@
         $('#flip').on('click', function() {
             $('.wall').click();
         });
+        $('#reset').on('click', function() {
+            $('.wall').each(function () { $(this).removeClass('on').removeClass('unknown'); });
+            $('#encoded').val(getEncodedText());
+        })
     </script>
 </html>

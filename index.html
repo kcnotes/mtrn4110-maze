@@ -62,10 +62,10 @@
         <button id="reset">Reset walls</button>
         <input id="encoded"></input>
         <!--<input id="encoded2"></input>-->
-        <template id="v-wall"><div class="wall v-wall on"></div></template>
+        <template id="v-wall"><div class="wall v-wall"></div></template>
         <template id="v-wall-fixed"><div class="wall-fixed v-wall"></div></template>
         <template id="tile"><div class="tile"></div></template>
-        <template id="h-wall"><div class="wall h-wall on"></div></template>
+        <template id="h-wall"><div class="wall h-wall"></div></template>
         <template id="h-wall-fixed"><div class="wall-fixed h-wall"></div></template>
     </body>
     <script>
@@ -139,7 +139,7 @@
         $('.wall').on('click', function(e) {
             if ($(this).hasClass('on')) {
                 $(this).removeClass('on');
-                $(this).addClass('unknown');
+                $(this).addClass('off');
             } else if ($(this).hasClass('unknown')) {
                 $(this).removeClass('unknown');
                 $(this).addClass('off');
